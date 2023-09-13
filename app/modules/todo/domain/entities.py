@@ -7,5 +7,5 @@ from app.modules.todo.domain.value_objects import StatusValue
 class TaskEntity(Entity):
     title: str
     description: str
-    status: StatusValue
+    status: StatusValue.PENDING
     

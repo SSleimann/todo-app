@@ -1,6 +1,5 @@
 from sqlalchemy import select, update
 from dataclasses import asdict
-from fastapi import Depends
 
 from typing import TypeVar, Any
 
@@ -17,7 +16,7 @@ class SQLAlchemyRepository(BaseRepository):
     mapper_class = type[BaseMapper]
     model_class = type[MapperModel]
         
-    def __init__(self, session: AsyncSession = Depends(get_async_session)) -> None:
+    def __init__(self, session: AsyncSession) -> None:
         self._session = session
     
     async def create(self, entity: Entity) -> Entity:
@@ -75,7 +74,8 @@ class SQLAlchemyRepository(BaseRepository):
             raise EntityNotFoundException
         
         for key, value in data_entity.items():
-            setattr(instance, key, value)
+            if value is not None:
+                setattr(instance, key, value)
         
         await self._session.commit()
         

@@ -1,9 +1,9 @@
 import dataclasses
 
-from app.kernel.domain.value_objects import ValueObject
+import enum
 
-@dataclasses.dataclass(frozen=True)
-class StatusValue(ValueObject):
-    DONE = "Done"
-    PENDING = "Pending"
-    CANCELLED = "Cancelled"
+class StatusValue(str, enum.Enum):
+    DONE: str = "Done"
+    PENDING: str = "Pending"
+    CANCELLED: str = "Cancelled"
+    

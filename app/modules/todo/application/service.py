@@ -18,7 +18,7 @@ class ToDoService(BaseService):
         return result
     
     async def get(self, taskDto: TaskGetDTO) -> TaskEntity:
-        result = await self.repository.get(taskDto)
+        result = await self.repository.get(taskDto.id)
         return result
     
     async def get_all(self) -> list[TaskEntity]:

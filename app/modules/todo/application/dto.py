@@ -22,3 +22,5 @@ class TaskUpdateDTO(EntityDTO):
     description: Optional[str] = None
     status: Optional[StatusValue] = None
     
+class TaskSetStatusValueDTO(EntityDTO):
+    status: StatusValue

@@ -1,9 +1,8 @@
 from app.modules.todo.domain.entities import TaskEntity
-from app.modules.todo.domain.service import ToDoServiceInterface
-from app.modules.todo.application.dto import TaskCreationDTO, TaskDeletionDTO, TaskGetDTO, TaskUpdateDTO
+from app.kernel.domain.service import BaseService
+from app.modules.todo.application.dto import TaskCreationDTO, TaskDeletionDTO, TaskGetDTO, TaskUpdateDTO, TaskSetStatusValueDTO
 
-
-class ToDoService(ToDoServiceInterface):
+class ToDoService(BaseService):
     async def create(self, taskDto: TaskCreationDTO) -> TaskEntity:
         task_entity = TaskEntity(
             id=TaskEntity.next_id(),
@@ -34,3 +33,6 @@ class ToDoService(ToDoServiceInterface):
         )
         return await self.repository.update(task_entity)
         
+    async def set_status_value(self, taskDto: TaskSetStatusValueDTO) -> TaskEntity:
+        return await self.repository.set_status_value(taskDto.id, taskDto.status)
+    

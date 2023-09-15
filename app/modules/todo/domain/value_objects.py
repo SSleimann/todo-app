@@ -2,8 +2,8 @@ import dataclasses
 
 import enum
 
-class StatusValue(str, enum.Enum):
-    DONE: str = "Done"
-    PENDING: str = "Pending"
-    CANCELLED: str = "Cancelled"
+class StatusValue(enum.Enum):
+    DONE = 1
+    PENDING = 2
+    CANCELLED = 3
     

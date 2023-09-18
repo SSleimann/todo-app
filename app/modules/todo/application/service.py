@@ -1,9 +1,9 @@
 from app.modules.todo.domain.entities import TaskEntity
 from app.kernel.domain.service import BaseService
-from app.modules.todo.application.dto import TaskCreationDTO, TaskDeletionDTO, TaskGetDTO, TaskUpdateDTO, TaskSetStatusValueDTO
+from app.modules.todo.application.dto import TaskCreationDTO, TaskDeletionDTO, TaskGetDTO, TaskUpdateDTO, TaskSetStatusValueDTO, TaskDTO
 
 class ToDoService(BaseService):
-    async def create(self, taskDto: TaskCreationDTO) -> TaskEntity:
+    async def create(self, taskDto: TaskCreationDTO) -> TaskDTO:
         task_entity = TaskEntity(
             id=TaskEntity.next_id(),
             title=taskDto.title,
@@ -11,7 +11,12 @@ class ToDoService(BaseService):
             status=taskDto.status,
         )
         result = await self.repository.create(task_entity)
-        return result
+        return TaskDTO(
+            id=result.id,
+            title=result.title,
+            description=result.description,
+            status=result.status
+        )
 
     async def delete(self, taskDto: TaskDeletionDTO) -> TaskEntity:
         result = await self.repository.delete(taskDto.id)

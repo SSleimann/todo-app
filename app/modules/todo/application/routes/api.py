@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends, APIRouter, Query
+from pydantic import UUID4
 
 from app.config.dependencies import get_service_todo
 from app.modules.todo.application.dto import TaskCreationDTO, TaskGetDTO, TaskDeletionDTO, TaskDTO, TaskUpdatePatchDTO, TaskUpdatePutDTO
@@ -16,14 +17,14 @@ async def create_task_todo(body: TaskCreationDTO, service: ToDoService = Depends
     return result
 
 @todo_router.get('/{uuid}', status_code=200, response_model=Response[TaskDTO])
-async def get_task(uuid: str, service: ToDoService = Depends(get_service_todo)):
+async def get_task(uuid: UUID4, service: ToDoService = Depends(get_service_todo)):
     dto = TaskGetDTO(id=uuid)
     result = await service.get(dto)
     
     return result
 
 @todo_router.delete('/{uuid}', status_code=200, response_model=Response[TaskDTO])
-async def get_task(uuid: str, service: ToDoService = Depends(get_service_todo)):
+async def get_task(uuid: UUID4, service: ToDoService = Depends(get_service_todo)):
     dto = TaskDeletionDTO(id=uuid)
     result = await service.delete(dto)
     

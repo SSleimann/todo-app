@@ -22,10 +22,13 @@ class TaskDeletionDTO(EntityDTO):
 class TaskGetDTO(EntityDTO):
     ...
 
-class TaskUpdateDTO(EntityDTO):
+class TaskUpdatePatchDTO(EntityDTO):
     title: Optional[str] = None
     description: Optional[str] = None
     status: Optional[StatusValue] = None
-    
-class TaskSetStatusValueDTO(EntityDTO):
+
+class TaskUpdatePutDTO(EntityDTO):
+    title: str
+    description: str
     status: StatusValue
+

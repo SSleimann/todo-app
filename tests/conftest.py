@@ -1,9 +1,11 @@
 import pytest
 
+from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 
+from app.api.main import app
 from app.config.apiconfig import TestSettings
-from app.config.database import Base
+from app.config.database import Base, get_async_session
 
 @pytest.fixture(scope="session")
 def anyio_backend():
@@ -26,3 +28,9 @@ async def session(db):
         yield session
         
     
+@pytest.fixture(scope="function")
+def api_client(session):
+    app.dependency_overrides[get_async_session] = lambda: session
+    test_client = TestClient(app)
+    return test_client
+

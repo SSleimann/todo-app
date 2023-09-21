@@ -118,6 +118,13 @@ async def test_sqlachemy_repository_optional_update(session: AsyncSession):
     assert result.name == user1.name
     assert newEntity.name is None
     
+async def test_sqlalchemy_repository_get_all_paginated(session: AsyncSession):
+    repo = UserRepository(session)
+    
+    instances = await repo.get_paginated_all()
+    
+    assert len(instances) > 0 and len(instances) <= 10
+    
 async def test_sqlalchemy_repository_errors(session: AsyncSession):
     user = UserEntity(id=ValueUUID.next_id(), name="juanp ablo1")
     repo = UserRepository(session)

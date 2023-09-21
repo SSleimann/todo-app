@@ -1,5 +1,3 @@
-import dataclasses
-
 import enum
 
 class StatusValue(enum.Enum):

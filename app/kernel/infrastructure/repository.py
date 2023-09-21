@@ -56,12 +56,7 @@ class SQLAlchemyRepository(BaseRepository):
         
         result = await self._session.scalars(select(model))
         
-        if not result:
-            raise EntityNotFoundException
-        
-        instances = result.all()
-        
-        entities = [self.model_to_entity(instance) for instance in instances]
+        entities = [self.model_to_entity(instance) for instance in result]
         return entities
     
     async def update(self, entity: Entity) -> Entity:
@@ -80,6 +75,18 @@ class SQLAlchemyRepository(BaseRepository):
         await self._session.commit()
         
         return self.model_to_entity(instance)
+    
+    async def get_paginated_all(self, page: int = 1, per_page: int = 10) -> list[Entity]:
+        model_class = self.get_model_class()
+        
+        limit = per_page * page
+        offset = (page - 1) * per_page
+        
+        instances = await self._session.scalars(select(model_class).limit(limit).offset(offset))
+        
+        entities = [self.model_to_entity(instance) for instance in instances]
+        
+        return entities
     
     @property
     def mapper(self):

@@ -56,7 +56,7 @@ class SQLAlchemyRepository(BaseRepository):
         
         result = await self._session.scalars(select(model))
         
-        entities = [self.model_to_entity(instance) for instance in result]
+        entities = [self.model_to_entity(instance) for instance in result.all()]
         return entities
     
     async def update(self, entity: Entity) -> Entity:
@@ -84,7 +84,7 @@ class SQLAlchemyRepository(BaseRepository):
         
         instances = await self._session.scalars(select(model_class).limit(limit).offset(offset))
         
-        entities = [self.model_to_entity(instance) for instance in instances]
+        entities = [self.model_to_entity(instance) for instance in instances.all()]
         
         return entities
     

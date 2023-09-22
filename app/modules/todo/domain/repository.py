@@ -5,6 +5,6 @@ from app.kernel.domain.value_objects import ValueUUID
 from app.modules.todo.domain.entities import TaskEntity
 from app.modules.todo.domain.value_objects import StatusValue
 
+
 class ToDoRepository(BaseRepository, ABC):
-    """ Interface for ToDo repository """
-    
+    """Interface for ToDo repository"""

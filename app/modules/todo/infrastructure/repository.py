@@ -7,7 +7,7 @@ from app.modules.todo.domain.value_objects import StatusValue
 from app.modules.todo.infrastructure.mapper import TaskMapper
 from app.modules.todo.infrastructure.models import TaskModel
 
+
 class SQLToDoRepository(ToDoRepository, SQLAlchemyRepository):
     mapper_class = TaskMapper
     model_class = TaskModel
-    

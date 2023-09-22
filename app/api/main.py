@@ -8,4 +8,3 @@ app = FastAPI()
 
 init_error_handlers(app)
 add_multiple_routes(app, [todo_router])
-

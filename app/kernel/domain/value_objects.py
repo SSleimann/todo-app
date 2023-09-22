@@ -6,9 +6,8 @@ from dataclasses import dataclass
 class ValueObject:
     ...
 
+
 class ValueUUID(uuid.UUID):
-    
     @classmethod
     def next_id(cls):
         return cls(int=uuid.uuid4().int)
-    

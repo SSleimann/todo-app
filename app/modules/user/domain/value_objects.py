@@ -6,8 +6,5 @@ class Email(str):
         try:
             email = validate_email(email).normalized
         except EmailNotValidError:
-            raise ValueError('Invalid email')
+            raise ValueError("Invalid email")
         return super().__new__(cls, email)
-    
-
-    

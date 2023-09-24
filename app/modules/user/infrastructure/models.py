@@ -13,4 +13,3 @@ class UserModel(Base):
     access_token = Column(String(255), nullable=False, unique=True)
     username = Column(String(100), nullable=False)
     is_active = Column(Boolean, default=True)
-    

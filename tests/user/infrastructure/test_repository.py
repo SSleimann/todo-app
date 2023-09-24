@@ -16,20 +16,20 @@ async def test_repository_get_by_email(session):
         password="testpass",
         access_token="akakskaskak",
         is_active=True,
-        username="test_user"
+        username="test_user",
     )
-    
+
     session.add(user_model)
     await session.commit()
-    
+
     repo = UserRepository(session)
     email = Email("email@gmail.com")
     result = await repo.get_by_email(email)
-    
+
     assert result.email == email
     assert isinstance(result, UserEntity)
-    
-    
+
+
 async def test_repository_get_by_access_token(session):
     user_model = UserModel(
         id=UserEntity.next_id(),
@@ -37,25 +37,25 @@ async def test_repository_get_by_access_token(session):
         password="testpass",
         access_token="eeeee",
         is_active=True,
-        username="test_user"
+        username="test_user",
     )
-    
+
     session.add(user_model)
     await session.commit()
-    
+
     repo = UserRepository(session)
-    token ="eeeee"
+    token = "eeeee"
     result = await repo.get_by_access_token(token)
-    
+
     assert result.access_token == token
     assert isinstance(result, UserEntity)
-    
+
+
 async def test_exceptions_repo(session):
     repo = UserRepository(session)
-    
+
     with pytest.raises(EntityNotFoundException):
         await repo.get_by_email(Email("eeeeeeeeeeeeeeee@email.com"))
-        
+
     with pytest.raises(EntityNotFoundException):
-        await repo.get_by_access_token('xxxx')
-    
+        await repo.get_by_access_token("xxxx")

@@ -21,7 +21,7 @@ class UserEntity(Entity):
 
 
 class UserModel(Base):
-    __tablename__ = "users"
+    __tablename__ = "user_tests"
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
     name = Column(String)
 

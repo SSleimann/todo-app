@@ -30,4 +30,3 @@ keywords = ["clean architecture", "api", "to-do", "fastapi"]
 line-length = 88
 target-version = ['py311']
 include = '\.pyi?$'
-

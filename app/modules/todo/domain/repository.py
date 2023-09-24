@@ -1,9 +1,6 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
 from app.kernel.domain.repository import BaseRepository
-from app.kernel.domain.value_objects import ValueUUID
-from app.modules.todo.domain.entities import TaskEntity
-from app.modules.todo.domain.value_objects import StatusValue
 
 
 class ToDoRepository(BaseRepository, ABC):

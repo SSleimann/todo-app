@@ -5,7 +5,7 @@ from app.kernel.domain.service import BaseService
 from app.kernel.domain.exceptions import EntityNotFoundException, AuthErrorException
 from app.modules.user.domain.entities import UserEntity
 from app.modules.user.domain.value_objects import Email
-from app.modules.user.application.dto import LoginDTO, UserCreationDTO, UserDTO, UserGetByAccessTokenDTO, UserGetByEmailDTO, UserGetDTO
+from app.modules.user.application.dto import TokenDTO, LoginDTO, UserCreationDTO, UserDTO, UserGetByAccessTokenDTO, UserGetByEmailDTO, UserGetDTO
 
 class UserService(BaseService):
     async def create(self, dto: UserCreationDTO) -> dict[str, UserDTO]:
@@ -46,7 +46,7 @@ class UserService(BaseService):
         
         return {'message': 'Ok!', 'data': dto}
     
-    async def login(self, dto: LoginDTO) -> dict[str, UserDTO]:
+    async def login(self, dto: LoginDTO) -> dict[str, TokenDTO]:
         paswd = dto.password.get_secret_value()
         
         try:
@@ -63,12 +63,9 @@ class UserService(BaseService):
         if decode_jwt(instance.access_token, current_config.jwt_secret_key) is None:
             instance = await self.repository.set_access_token(instance.id)
         
-        dto = UserDTO(
-            id=instance.id,
-            email=instance.email,
+        dto = TokenDTO(
             access_token=instance.access_token,
-            username=instance.username,
-            is_active=instance.is_active,
+            token_type='bearer'
         )
         
         return {'message': 'Authenticated!', 'data': dto}

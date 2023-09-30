@@ -1,7 +1,11 @@
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from starlette.requests import Request
 
+from app.kernel.domain.exceptions import AuthErrorException
+from app.config.apiconfig import current_config
 
 ALGORITHM = "HS256"
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -33,3 +37,20 @@ def decode_jwt(token: str | None, jwt_secret_key: str) -> str | None:
         
     except JWTError:
         return None
+    
+class JWTBearer(HTTPBearer):
+    async def __call__(self, request: Request) -> HTTPAuthorizationCredentials | None:
+        credentials =  await super().__call__(request)
+        
+        if credentials:
+            if not credentials.scheme == "Bearer":
+                raise AuthErrorException('Invalid authentication scheme!')
+            
+            if not decode_jwt(credentials.credentials, current_config.jwt_secret_key):
+                raise AuthErrorException('Invalid token!')
+            
+            return credentials.credentials
+        
+        else:
+            raise AuthErrorException('Invalid authorization code!')
+        

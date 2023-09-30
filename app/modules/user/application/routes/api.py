@@ -1,10 +1,8 @@
 from fastapi import Depends, APIRouter
 
-from pydantic import UUID4
-
-from app.config.dependencies import get_service_user
+from app.config.dependencies import get_service_user, get_current_active_user
 from app.kernel.application.response import Response
-from app.modules.user.application.dto import UserCreationDTO, UserDTO, LoginDTO
+from app.modules.user.application.dto import UserCreationDTO, UserDTO, LoginDTO, TokenDTO, UserGetDTO
 from app.modules.user.application.service import UserService
 
 user_router = APIRouter(prefix="/user")
@@ -15,8 +13,15 @@ async def register_user(body: UserCreationDTO, service: UserService = Depends(ge
 
     return result
 
-@user_router.post('/login', response_model=Response[UserDTO])
+@user_router.post('/login', response_model=Response[TokenDTO])
 async def login_user(body: LoginDTO, service: UserService = Depends(get_service_user)):
     result = await service.login(body)
+    
+    return result
+
+@user_router.get('/me', response_model=Response[UserDTO])
+async def get_user_me(current_user: UserDTO = Depends(get_current_active_user), service: UserService = Depends(get_service_user)):
+    dto = UserGetDTO(id=current_user.id)
+    result = await service.get(dto)
     
     return result

@@ -37,3 +37,6 @@ class LoginDTO(BaseModel):
     email: EmailStr
     password: SecretStr
     
+class TokenDTO(BaseModel):
+    access_token: str
+    token_type: str

@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 
 from app.api.main import app
-from app.config.apiconfig import TestSettings
+from app.config.apiconfig import current_config
 from app.config.database import Base, get_async_session
 
 
@@ -15,8 +15,8 @@ def anyio_backend():
 
 @pytest.fixture(scope="session")
 async def db(anyio_backend):
-    settings = TestSettings()
-    engine = create_async_engine(settings.database_url, future=True)
+    current_config.database_url = "sqlite+aiosqlite:///test.db"
+    engine = create_async_engine(current_config.database_url, future=True)
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

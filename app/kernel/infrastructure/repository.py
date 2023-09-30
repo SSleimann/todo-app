@@ -1,14 +1,15 @@
 from sqlalchemy import select, update
+from sqlalchemy.exc import IntegrityError
 from dataclasses import asdict
 
 from typing import TypeVar, Any
 
-from app.config.database import get_async_session, AsyncSession
+from app.config.database import AsyncSession
 from app.kernel.domain.repository import BaseRepository
 from app.kernel.domain.entities import Entity
 from app.kernel.domain.value_objects import ValueUUID
 from app.kernel.infrastructure.mapper import BaseMapper
-from app.kernel.domain.exceptions import EntityNotFoundException
+from app.kernel.domain.exceptions import EntityNotFoundException, EntityExists
 
 MapperModel = TypeVar("MapperModel", bound=Any)
 
@@ -23,9 +24,13 @@ class SQLAlchemyRepository(BaseRepository):
     async def create(self, entity: Entity) -> Entity:
         instance = self.entity_to_model(entity)
 
-        self._session.add(instance)
-        await self._session.commit()
-
+        try:
+            self._session.add(instance)
+            await self._session.commit()
+        except IntegrityError:
+            await self._session.rollback()
+            raise EntityExists
+        
         return self.model_to_entity(instance)
 
     async def delete(self, entity_id: ValueUUID) -> Entity:

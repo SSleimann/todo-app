@@ -9,6 +9,7 @@ from alembic import context
 
 from app.config.database import Base
 from app.modules.todo.infrastructure.models import TaskModel
+from app.modules.user.infrastructure.models import UserModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

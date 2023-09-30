@@ -22,7 +22,9 @@ dependencies = [
   "alembic",
   "aiosqlite",
   "pytest",
-  "black"
+  "black",
+  "python-jose[cryptography]",
+  "passlib[bcrypt]"
 ]
 keywords = ["clean architecture", "api", "to-do", "fastapi"]
 

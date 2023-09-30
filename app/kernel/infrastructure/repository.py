@@ -30,7 +30,7 @@ class SQLAlchemyRepository(BaseRepository):
         except IntegrityError:
             await self._session.rollback()
             raise EntityExists
-        
+
         return self.model_to_entity(instance)
 
     async def delete(self, entity_id: ValueUUID) -> Entity:

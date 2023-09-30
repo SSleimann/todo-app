@@ -24,7 +24,7 @@ async def test_repository_get_by_email(session, user_test):
 
 async def test_repository_get_by_access_token(session, user_test):
     repo = UserRepository(session)
-    
+
     result = await repo.get_by_access_token(user_test.access_token)
 
     assert result.access_token == user_test.access_token
@@ -40,12 +40,13 @@ async def test_exceptions_repo(session):
     with pytest.raises(EntityNotFoundException):
         await repo.get_by_access_token("xxxx")
 
+
 async def test_repository_set_access_token(session, user_test):
     repo = UserRepository(session)
-    
+
     instance = await repo.set_access_token(user_test.id)
     token_user = jwt.decode(instance.access_token, current_config.jwt_secret_key)
-    
+
     assert instance.access_token is not None
     assert instance.access_token == user_test.access_token
     assert token_user["sub"] == instance.email

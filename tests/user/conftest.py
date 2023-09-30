@@ -9,6 +9,7 @@ from app.kernel.domain.value_objects import ValueUUID
 
 id_user_general = ValueUUID.next_id()
 
+
 @pytest.fixture(scope="package", autouse=True)
 async def user_test_creation(db: AsyncEngine):
     async with AsyncSession(db, expire_on_commit=False) as conn:
@@ -20,12 +21,13 @@ async def user_test_creation(db: AsyncEngine):
             access_token="abcde",
             is_active=True,
         )
-        
+
         conn.add(model)
         await conn.commit()
-    
+
+
 @pytest.fixture(scope="function")
 async def user_test(session: AsyncSession):
     user = await session.get(UserModel, id_user_general)
-    
+
     return user

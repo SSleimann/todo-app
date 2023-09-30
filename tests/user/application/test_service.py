@@ -121,16 +121,15 @@ async def test_user_login_active_user(session):
 
     session.add(model)
     await session.commit()
-    
+
     repo = UserRepository(session)
     service = UserService(repo)
     dto = LoginDTO(email=model.email, password="testpass")
-    
-    
+
     with pytest.raises(AuthErrorException, match="User is not active!"):
         await service.login(dto)
-        
-    
+
+
 async def test_user_login_invalid_passwd(session, user_test):
     repo = UserRepository(session)
     service = UserService(repo)

@@ -98,24 +98,10 @@ async def test_sqlalchemy_repository_update(session: AsyncSession):
     newEntity: UserEntity = await repo.create(user1)
     newEntity.name = "hola"
 
-    result = await repo.update(newEntity)
+    result = await repo.update(newEntity.id, {"name": newEntity.name})
 
     assert result.id == newEntity.id
     assert result.name == "hola"
-
-
-async def test_sqlachemy_repository_optional_update(session: AsyncSession):
-    user1 = UserEntity(id=ValueUUID.next_id(), name="juan pablo1")
-    repo = UserRepository(session)
-    newEntity: UserEntity = await repo.create(user1)
-    newEntity.name = None
-
-    result = await repo.update(newEntity)
-
-    assert result.id == newEntity.id
-    assert result.name == user1.name
-    assert newEntity.name is None
-
 
 async def test_sqlalchemy_repository_get_all_paginated(session: AsyncSession):
     repo = UserRepository(session)
@@ -136,4 +122,4 @@ async def test_sqlalchemy_repository_errors(session: AsyncSession):
         await repo.delete(user.id)
 
     with pytest.raises(EntityNotFoundException):
-        await repo.update(user)
+        await repo.update(user.id, params={"name": "XD"})

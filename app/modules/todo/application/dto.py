@@ -1,4 +1,4 @@
-from pydantic import Field, BaseModel
+from pydantic import Field, BaseModel, UUID4
 
 from typing import Optional
 
@@ -9,7 +9,7 @@ from app.modules.todo.domain.value_objects import StatusValue
 class TaskDTO(EntityDTO):
     title: str
     description: str
-    status: StatusValue = Field(default=StatusValue.PENDING)
+    status: StatusValue
 
 
 class TaskCreationDTO(BaseModel):

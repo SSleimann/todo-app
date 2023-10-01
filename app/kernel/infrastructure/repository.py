@@ -1,6 +1,5 @@
-from sqlalchemy import select, update
+from sqlalchemy import select, inspect, update
 from sqlalchemy.exc import IntegrityError
-from dataclasses import asdict
 
 from typing import TypeVar, Any
 
@@ -65,19 +64,21 @@ class SQLAlchemyRepository(BaseRepository):
         entities = [self.model_to_entity(instance) for instance in result.all()]
         return entities
 
-    async def update(self, entity: Entity) -> Entity:
+    async def update(self, id: ValueUUID, params: dict) -> Entity:
         model_class = self.get_model_class()
-        instance = await self._session.get(model_class, entity.id)
-        data_entity = asdict(entity)
-        data_entity.pop("id")
+        instance = await self._session.get(model_class, id)
 
         if instance is None:
             raise EntityNotFoundException
 
-        for key, value in data_entity.items():
-            if value is not None:
-                setattr(instance, key, value)
-
+        mapper = inspect(model_class)
+        models_props = {
+            mapper.attrs[key].key : value for key, value in params.items() if hasattr(mapper.attrs, key)
+        }
+        
+        await self._session.execute(
+            update(model_class).where(model_class.id == id).values(models_props)
+        )
         await self._session.commit()
 
         return self.model_to_entity(instance)

@@ -22,5 +22,5 @@ class BaseRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def update(self, entity: Entity) -> Entity:
+    async def update(self, entity_id: ValueUUID, params: dict) -> Entity:
         raise NotImplementedError

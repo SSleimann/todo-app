@@ -70,15 +70,12 @@ class SQLAlchemyRepository(BaseRepository):
 
         if instance is None:
             raise EntityNotFoundException
-
-        mapper = inspect(model_class)
-        models_props = {
-            mapper.attrs[key].key : value for key, value in params.items() if hasattr(mapper.attrs, key)
-        }
         
-        await self._session.execute(
-            update(model_class).where(model_class.id == id).values(models_props)
-        )
+        for key, value in params.items():
+            current_value = getattr(instance, key, None)
+            if current_value is not None:
+                setattr(instance, key, value)
+            
         await self._session.commit()
 
         return self.model_to_entity(instance)
@@ -101,16 +98,16 @@ class SQLAlchemyRepository(BaseRepository):
 
     async def get_by_params(self, params: dict) -> list[Entity]:
         model_class = self.get_model_class()
-        mapper = inspect(model_class)
-        models_props = { mapper.attrs[key].key : value for key, value in params.items() if hasattr(mapper.attrs, key)  }
         
         q = await self._session.scalars(
-            select(model_class).filter_by(**models_props)
+            select(model_class).filter_by(**params)
         )
+        instance = q.first()
         
-        entities = [ self.model_to_entity(instance) for instance in q.all() ]
+        if instance is None:
+            raise EntityNotFoundException
         
-        return entities
+        return self.model_to_entity(instance)
 
     @property
     def mapper(self):

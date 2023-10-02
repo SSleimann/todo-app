@@ -115,13 +115,10 @@ async def test_sqlalchemy_repository_get_all_paginated(session: AsyncSession):
 async def test_sqlalchemy_repository_get_by_params(session: AsyncSession):
     repo = UserRepository(session)
 
-    instances = await repo.get_by_params(params={"name": "juanp ablo", "description": None})
+    instance = await repo.get_by_params(params={"name": "juanp ablo1", "description": None})
 
-    for instance in instances:
-        assert instance.name.startswith("juanp ablo")
-        assert instance.description is None
-    
-    assert len(instances) >= 1
+    assert instance.name == "juanp ablo1"
+    assert instance.description is None
 
 async def test_sqlalchemy_repository_errors(session: AsyncSession):
     user = UserEntity(id=ValueUUID.next_id(), name="juanp ablo1")

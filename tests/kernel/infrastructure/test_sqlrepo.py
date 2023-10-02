@@ -18,20 +18,22 @@ pytestmark = pytest.mark.anyio
 @dataclasses.dataclass
 class UserEntity(Entity):
     name: str
+    description: str = None
 
 
 class UserModel(Base):
     __tablename__ = "user_tests"
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
     name = Column(String)
+    description = Column(String, nullable=True)
 
 
 class UserMapper(BaseMapper):
     def model_to_entity(self, instance: UserModel) -> UserEntity:
-        return UserEntity(id=instance.id, name=instance.name)
+        return UserEntity(id=instance.id, name=instance.name, description=instance.description)
 
     def entity_to_model(self, entity: UserEntity) -> UserModel:
-        return UserModel(id=entity.id, name=entity.name)
+        return UserModel(id=entity.id, name=entity.name, description=entity.description)
 
 
 class UserRepository(SQLAlchemyRepository):
@@ -110,6 +112,16 @@ async def test_sqlalchemy_repository_get_all_paginated(session: AsyncSession):
 
     assert len(instances) > 0 and len(instances) <= 10
 
+async def test_sqlalchemy_repository_get_by_params(session: AsyncSession):
+    repo = UserRepository(session)
+
+    instances = await repo.get_by_params(params={"name": "juanp ablo", "description": None})
+
+    for instance in instances:
+        assert instance.name.startswith("juanp ablo")
+        assert instance.description is None
+    
+    assert len(instances) >= 1
 
 async def test_sqlalchemy_repository_errors(session: AsyncSession):
     user = UserEntity(id=ValueUUID.next_id(), name="juanp ablo1")

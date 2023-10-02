@@ -99,6 +99,19 @@ class SQLAlchemyRepository(BaseRepository):
 
         return entities
 
+    async def get_by_params(self, params: dict) -> list[Entity]:
+        model_class = self.get_model_class()
+        mapper = inspect(model_class)
+        models_props = { mapper.attrs[key].key : value for key, value in params.items() if hasattr(mapper.attrs, key)  }
+        
+        q = await self._session.scalars(
+            select(model_class).filter_by(**models_props)
+        )
+        
+        entities = [ self.model_to_entity(instance) for instance in q.all() ]
+        
+        return entities
+
     @property
     def mapper(self):
         return self.mapper_class()

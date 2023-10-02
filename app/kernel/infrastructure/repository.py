@@ -1,4 +1,4 @@
-from sqlalchemy import select, inspect, update
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from typing import TypeVar, Any
@@ -70,12 +70,12 @@ class SQLAlchemyRepository(BaseRepository):
 
         if instance is None:
             raise EntityNotFoundException
-        
+
         for key, value in params.items():
             current_value = getattr(instance, key, None)
             if current_value is not None:
                 setattr(instance, key, value)
-            
+
         await self._session.commit()
 
         return self.model_to_entity(instance)
@@ -98,15 +98,16 @@ class SQLAlchemyRepository(BaseRepository):
 
     async def get_by_params(self, params: dict) -> list[Entity]:
         model_class = self.get_model_class()
-        
-        q = await self._session.scalars(
-            select(model_class).filter_by(**params)
-        )
+        filter_params = {
+            key: value for key, value in params.items() if hasattr(model_class, key)
+        }
+
+        q = await self._session.scalars(select(model_class).filter_by(**filter_params))
         instance = q.first()
-        
+
         if instance is None:
             raise EntityNotFoundException
-        
+
         return self.model_to_entity(instance)
 
     @property

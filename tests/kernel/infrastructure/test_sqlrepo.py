@@ -30,7 +30,9 @@ class UserModel(Base):
 
 class UserMapper(BaseMapper):
     def model_to_entity(self, instance: UserModel) -> UserEntity:
-        return UserEntity(id=instance.id, name=instance.name, description=instance.description)
+        return UserEntity(
+            id=instance.id, name=instance.name, description=instance.description
+        )
 
     def entity_to_model(self, entity: UserEntity) -> UserModel:
         return UserModel(id=entity.id, name=entity.name, description=entity.description)
@@ -105,6 +107,7 @@ async def test_sqlalchemy_repository_update(session: AsyncSession):
     assert result.id == newEntity.id
     assert result.name == "hola"
 
+
 async def test_sqlalchemy_repository_get_all_paginated(session: AsyncSession):
     repo = UserRepository(session)
 
@@ -112,13 +115,17 @@ async def test_sqlalchemy_repository_get_all_paginated(session: AsyncSession):
 
     assert len(instances) > 0 and len(instances) <= 10
 
+
 async def test_sqlalchemy_repository_get_by_params(session: AsyncSession):
     repo = UserRepository(session)
 
-    instance = await repo.get_by_params(params={"name": "juanp ablo1", "description": None})
+    instance = await repo.get_by_params(
+        params={"name": "juanp ablo1", "description": None}
+    )
 
     assert instance.name == "juanp ablo1"
     assert instance.description is None
+
 
 async def test_sqlalchemy_repository_errors(session: AsyncSession):
     user = UserEntity(id=ValueUUID.next_id(), name="juanp ablo1")

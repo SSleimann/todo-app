@@ -70,7 +70,9 @@ class ToDoService(BaseService):
     async def update(
         self, taskDto: TaskUpdatePutDTO | TaskUpdatePatchDTO
     ) -> dict[str, TaskDTO]:
-        result = await self.repository.update(taskDto.id, taskDto.model_dump(exclude_none=True, exclude={'id'}))
+        result = await self.repository.update(
+            taskDto.id, taskDto.model_dump(exclude_none=True, exclude={"id"})
+        )
 
         dto = TaskDTO(
             id=result.id,

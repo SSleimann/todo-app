@@ -1,5 +1,5 @@
-from pydantic import BaseModel, UUID4
-
+from pydantic import BaseModel
+from uuid import UUID
 
 class EntityDTO(BaseModel):
-    id: UUID4
+    id: UUID

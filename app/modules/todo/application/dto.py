@@ -1,47 +1,30 @@
-from pydantic import Field, BaseModel, UUID4
-
+from pydantic import Field, BaseModel
+from uuid import UUID
 from typing import Optional
 
 from app.kernel.application.dto import EntityDTO
 from app.modules.todo.domain.value_objects import StatusValue
 
-
-class TaskBase(EntityDTO):
-    user_id: UUID4 = None
-
-
-class TaskDTO(TaskBase):
+class TaskDTO(EntityDTO):
     title: str
     description: str
     status: StatusValue
+    user_id: UUID
 
 
 class TaskCreationDTO(BaseModel):
     title: str
     description: str
     status: StatusValue = Field(default=StatusValue.PENDING)
-    user_id: UUID4 = None
 
-
-class TaskDeletionDTO(TaskBase):
-    ...
-
-
-class TaskGetParamsDTO(TaskBase):
-    ...
-
-
-class TaskUpdatePatchDTO(TaskBase):
+class TaskUpdatePatchDTO(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     status: Optional[StatusValue] = None
 
 
-class TaskUpdatePutDTO(TaskBase):
+class TaskUpdatePutDTO(BaseModel):
     title: str
     description: str
     status: StatusValue
 
-
-class TaskGetAllParams(BaseModel):
-    user_id: UUID4 = None

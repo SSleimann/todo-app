@@ -14,7 +14,7 @@ from app.modules.user.domain.value_objects import Email
 from app.modules.user.domain.entities import UserEntity
 
 
-class UserRepository(SQLAlchemyRepository, UserInterfaceRepository):
+class UserRepository(UserInterfaceRepository, SQLAlchemyRepository):
     mapper_class = UserMapper
     model_class = UserModel
 

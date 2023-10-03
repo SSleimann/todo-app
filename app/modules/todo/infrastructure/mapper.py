@@ -11,6 +11,7 @@ class TaskMapper(BaseMapper):
             title=instance.title,
             description=instance.description,
             status=instance.status,
+            user_id=instance.user_id,
         )
 
     def entity_to_model(self, entity: TaskEntity) -> TaskModel:
@@ -19,4 +20,5 @@ class TaskMapper(BaseMapper):
             title=entity.title,
             description=entity.description,
             status=entity.status,
+            user_id=entity.user_id,
         )

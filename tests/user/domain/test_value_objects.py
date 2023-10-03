@@ -1,6 +1,6 @@
 from app.modules.user.domain.entities import Email
 
-from email_validator import EmailNotValidError
+from app.kernel.domain.exceptions import AuthErrorException
 
 import pytest
 
@@ -13,5 +13,5 @@ def test_email_value_object():
 
 
 def test_validation_email():
-    with pytest.raises(ValueError):
+    with pytest.raises(AuthErrorException):
         Email("testmail.com")

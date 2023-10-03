@@ -77,25 +77,6 @@ async def test_sqlalchemy_repository_get(session: AsyncSession):
     assert result.id == user1.id
     assert result.name == user1.name
 
-
-async def test_sqlalchemy_repository_get_all(session: AsyncSession):
-    repo = UserRepository(session)
-
-    first_results = await session.scalars(select(UserModel))
-
-    user1 = UserEntity(id=ValueUUID.next_id(), name="juanp ablo1")
-    user2 = UserEntity(id=ValueUUID.next_id(), name="juanp ablo2")
-    user3 = UserEntity(id=ValueUUID.next_id(), name="juanp ablo3")
-
-    await repo.create(user1)
-    await repo.create(user2)
-    await repo.create(user3)
-
-    second_results = await session.scalars(select(UserModel))
-
-    assert (len(second_results.all()) - len(first_results.all())) == 3
-
-
 async def test_sqlalchemy_repository_update(session: AsyncSession):
     user1 = UserEntity(id=ValueUUID.next_id(), name="juanp ablo1")
     repo = UserRepository(session)
@@ -111,19 +92,21 @@ async def test_sqlalchemy_repository_update(session: AsyncSession):
 async def test_sqlalchemy_repository_get_all_paginated(session: AsyncSession):
     repo = UserRepository(session)
 
-    instances = await repo.get_paginated_all()
+    instances = await repo.get_all_paginated()
 
     assert len(instances) > 0 and len(instances) <= 10
 
 
 async def test_sqlalchemy_repository_get_by_params(session: AsyncSession):
     repo = UserRepository(session)
-
+    user1 = UserEntity(id=ValueUUID.next_id(), name="jean_carlos")
+    newEntity = await repo.create(user1)
+    
     instance = await repo.get_by_params(
-        params={"name": "juanp ablo1", "description": None}
+        params={"name": newEntity.name, "description": None, "id": newEntity.id}
     )
 
-    assert instance.name == "juanp ablo1"
+    assert instance.name == newEntity.name
     assert instance.description is None
 
 

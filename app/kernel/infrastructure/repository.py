@@ -56,14 +56,6 @@ class SQLAlchemyRepository(BaseRepository):
 
         return entity
 
-    async def get_all(self) -> list[Entity]:
-        model = self.get_model_class()
-
-        result = await self._session.scalars(select(model))
-
-        entities = [self.model_to_entity(instance) for instance in result.all()]
-        return entities
-
     async def update(self, id: ValueUUID, params: dict) -> Entity:
         model_class = self.get_model_class()
         instance = await self._session.get(model_class, id)
@@ -80,7 +72,7 @@ class SQLAlchemyRepository(BaseRepository):
 
         return self.model_to_entity(instance)
 
-    async def get_paginated_all(
+    async def get_all_paginated(
         self, page: int = 1, per_page: int = 10
     ) -> list[Entity]:
         model_class = self.get_model_class()
@@ -96,7 +88,7 @@ class SQLAlchemyRepository(BaseRepository):
 
         return entities
 
-    async def get_by_params(self, params: dict) -> list[Entity]:
+    async def get_by_params(self, params: dict) -> Entity:
         model_class = self.get_model_class()
         filter_params = {
             key: value for key, value in params.items() if hasattr(model_class, key)

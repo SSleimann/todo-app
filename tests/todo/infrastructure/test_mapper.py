@@ -8,7 +8,9 @@ task1 = TaskEntity(
     title="Test Title 1",
     description="Task1",
     status=StatusValue.DONE,
+    user_id=TaskEntity.next_id(),
 )
+
 
 mapper = TaskMapper()
 
@@ -20,6 +22,7 @@ def test_task_to_model():
     assert instance.title == task1.title
     assert instance.description == task1.description
     assert instance.status == task1.status
+    assert instance.user_id == task1.user_id
 
 
 def test_model_to_entity():
@@ -28,7 +31,9 @@ def test_model_to_entity():
         title="Test Title 1",
         description="Task1",
         status=StatusValue.DONE,
+        user_id=TaskEntity.next_id(),
     )
+    
 
     entity = mapper.model_to_entity(instance)
 
@@ -36,3 +41,4 @@ def test_model_to_entity():
     assert entity.title == instance.title
     assert entity.description == instance.description
     assert entity.status == instance.status
+    assert entity.user_id == instance.user_id

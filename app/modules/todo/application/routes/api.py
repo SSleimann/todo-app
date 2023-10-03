@@ -17,7 +17,7 @@ from app.modules.todo.application.dto import (
 from app.modules.todo.application.service import ToDoService
 from app.kernel.application.response import Response
 
-todo_router = APIRouter(prefix="/todo")
+todo_router = APIRouter(prefix="/todo", tags=["todo"])
 
 
 @todo_router.post("/create", status_code=201, response_model=Response[TaskDTO])

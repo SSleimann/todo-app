@@ -11,7 +11,7 @@ from app.modules.user.application.dto import (
 )
 from app.modules.user.application.service import UserService
 
-user_router = APIRouter(prefix="/user")
+user_router = APIRouter(prefix="/user", tags=["user"])
 
 
 @user_router.post("/register", response_model=Response[UserDTO], status_code=201)

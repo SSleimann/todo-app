@@ -77,6 +77,7 @@ async def test_sqlalchemy_repository_get(session: AsyncSession):
     assert result.id == user1.id
     assert result.name == user1.name
 
+
 async def test_sqlalchemy_repository_update(session: AsyncSession):
     user1 = UserEntity(id=ValueUUID.next_id(), name="juanp ablo1")
     repo = UserRepository(session)
@@ -101,7 +102,7 @@ async def test_sqlalchemy_repository_get_by_params(session: AsyncSession):
     repo = UserRepository(session)
     user1 = UserEntity(id=ValueUUID.next_id(), name="jean_carlos")
     newEntity = await repo.create(user1)
-    
+
     instance = await repo.get_by_params(
         params={"name": newEntity.name, "description": None, "id": newEntity.id}
     )

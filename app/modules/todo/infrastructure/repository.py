@@ -11,12 +11,14 @@ class SQLToDoRepository(ToDoRepository, SQLAlchemyRepository):
     mapper_class = TaskMapper
     model_class = TaskModel
 
-    async def get_all_paginated_with_params(self, params: dict, page: int = 1, per_page: int = 10) -> list[TaskEntity]:
+    async def get_all_paginated_with_params(
+        self, params: dict, page: int = 1, per_page: int = 10
+    ) -> list[TaskEntity]:
         model_class = self.get_model_class()
         filter_params = {
             key: value for key, value in params.items() if hasattr(model_class, key)
         }
-        
+
         limit = per_page * page
         offset = (page - 1) * per_page
 

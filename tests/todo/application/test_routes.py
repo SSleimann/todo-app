@@ -11,7 +11,7 @@ from app.modules.todo.domain.value_objects import StatusValue
 def test_create_route_todo(api_client: TestClient, user_test):
     payload = {"title": "hola", "description": "a", "status": 3}
     headers = {"Authorization": f"Bearer {user_test.access_token}"}
-    
+
     req = api_client.post("/todo/create", json=payload, headers=headers)
     json = req.json()
 
@@ -61,7 +61,7 @@ async def test_delete_router_todo(api_client: TestClient, session, user_test):
 
 def test_get_all_paginated_router_without_query(api_client: TestClient, task_test):
     headers = {"Authorization": f"Bearer {task_test.user.access_token}"}
-    
+
     req = api_client.get("/todo/", headers=headers)
     json = req.json()
 
@@ -80,7 +80,7 @@ def test_get_all_paginated_router_per_page(api_client: TestClient, task_test):
 
 def test_get_all_paginated_router_page(api_client: TestClient, task_test):
     headers = {"Authorization": f"Bearer {task_test.user.access_token}"}
-    
+
     req = api_client.get("/todo/", params={"page": 2}, headers=headers)
     json = req.json()
 
@@ -92,12 +92,9 @@ async def test_update_router_put(api_client: TestClient, session, task_test):
     repo = SQLToDoRepository(session)
     headers = {"Authorization": f"Bearer {task_test.user.access_token}"}
     taskGet = await repo.get_by_params(
-        {
-            "id": task_test.id,
-            "user_id": task_test.user_id
-        }
+        {"id": task_test.id, "user_id": task_test.user_id}
     )
-    
+
     payload = {
         "id": str(taskGet.id),
         "title": "test title 2",
@@ -107,7 +104,7 @@ async def test_update_router_put(api_client: TestClient, session, task_test):
 
     req = api_client.put("/todo/update", json=payload, headers=headers)
     json = req.json()
-    
+
     assert json["data"]["id"] == str(taskGet.id)
     assert json["data"]["title"] != taskGet.title
     assert json["data"]["description"] != taskGet.description
@@ -115,23 +112,19 @@ async def test_update_router_put(api_client: TestClient, session, task_test):
     assert json["data"]["user_id"] == str(task_test.user_id)
     assert json["data"]["title"] == task_test.title
     assert req.status_code == 200
-    
 
 
 async def test_update_router_patch(api_client: TestClient, session, task_test):
     repo = SQLToDoRepository(session)
     headers = {"Authorization": f"Bearer {task_test.user.access_token}"}
     taskGet = await repo.get_by_params(
-        {
-            "id": task_test.id,
-            "user_id": task_test.user_id
-        }
+        {"id": task_test.id, "user_id": task_test.user_id}
     )
     payload = {"id": str(taskGet.id), "status": 1}
 
     req = api_client.patch("/todo/update", json=payload, headers=headers)
     json = req.json()
-    
+
     assert json["data"]["id"] == str(taskGet.id)
     assert json["data"]["title"] == taskGet.title
     assert json["data"]["description"] == taskGet.description

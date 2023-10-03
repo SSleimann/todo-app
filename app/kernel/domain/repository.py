@@ -20,7 +20,7 @@ class BaseRepository(abc.ABC):
     @abc.abstractmethod
     async def get_all_paginated(self) -> list[Entity]:
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     async def get_by_params(self, params: dict) -> Entity:
         raise NotImplementedError

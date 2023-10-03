@@ -33,7 +33,6 @@ def test_model_to_entity():
         status=StatusValue.DONE,
         user_id=TaskEntity.next_id(),
     )
-    
 
     entity = mapper.model_to_entity(instance)
 

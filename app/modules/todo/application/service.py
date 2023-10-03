@@ -32,7 +32,9 @@ class ToDoService(BaseService):
         return {"message": "Created!", "data": dto}
 
     async def delete(self, taskDto: TaskDeletionDTO) -> dict[str, TaskDTO]:
-        task = await self.repository.get_by_params({"id": taskDto.id, "user_id": taskDto.user_id})
+        task = await self.repository.get_by_params(
+            {"id": taskDto.id, "user_id": taskDto.user_id}
+        )
         result = await self.repository.delete(task.id)
 
         dto = TaskDTO(
@@ -46,7 +48,9 @@ class ToDoService(BaseService):
         return {"message": "Deleted!", "data": dto}
 
     async def get_by_params(self, taskDto: TaskGetParamsDTO) -> dict[str, TaskDTO]:
-        result = await self.repository.get_by_params({"id": taskDto.id, "user_id": taskDto.user_id})
+        result = await self.repository.get_by_params(
+            {"id": taskDto.id, "user_id": taskDto.user_id}
+        )
 
         dto = TaskDTO(
             id=result.id,
@@ -61,12 +65,9 @@ class ToDoService(BaseService):
     async def update(
         self, taskDto: TaskUpdatePutDTO | TaskUpdatePatchDTO
     ) -> dict[str, TaskDTO]:
-        param_filter = {
-            "id": taskDto.id,
-            "user_id": taskDto.user_id
-        }
+        param_filter = {"id": taskDto.id, "user_id": taskDto.user_id}
         task = await self.repository.get_by_params(param_filter)
-        
+
         result = await self.repository.update(
             task.id, taskDto.model_dump(exclude_none=True, exclude={"id", "user_id"})
         )
@@ -76,7 +77,7 @@ class ToDoService(BaseService):
             title=result.title,
             description=result.description,
             status=result.status,
-            user_id=result.user_id
+            user_id=result.user_id,
         )
 
         return {"message": "Updated!", "data": dto}
@@ -84,7 +85,9 @@ class ToDoService(BaseService):
     async def get_all_paginated_params(
         self, taskdto: TaskGetParamsDTO, page: int = 1, per_page: int = 10
     ) -> dict[str, list[TaskDTO]]:
-        results = await self.repository.get_all_paginated_with_params(taskdto.model_dump(), page, per_page)
+        results = await self.repository.get_all_paginated_with_params(
+            taskdto.model_dump(), page, per_page
+        )
 
         instances = [
             TaskDTO(
@@ -92,7 +95,7 @@ class ToDoService(BaseService):
                 title=obj.title,
                 description=obj.description,
                 status=obj.status,
-                user_id=obj.user_id
+                user_id=obj.user_id,
             )
             for obj in results
         ]

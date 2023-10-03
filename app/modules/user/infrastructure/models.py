@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship
 
 from app.config.database import GUID, Base
 
+
 class UserModel(Base):
     __tablename__ = "users"
     id = Column(GUID, primary_key=True, default=uuid.uuid4)

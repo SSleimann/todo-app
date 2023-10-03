@@ -12,7 +12,7 @@ from app.modules.todo.application.dto import (
     TaskDTO,
     TaskUpdatePatchDTO,
     TaskUpdatePutDTO,
-    TaskGetAllParams
+    TaskGetAllParams,
 )
 from app.modules.todo.application.service import ToDoService
 from app.kernel.application.response import Response
@@ -22,7 +22,9 @@ todo_router = APIRouter(prefix="/todo")
 
 @todo_router.post("/create", status_code=201, response_model=Response[TaskDTO])
 async def create_task_todo(
-    body: TaskCreationDTO, service: ToDoService = Depends(get_service_todo), user: UserDTO = Depends(get_current_active_user)
+    body: TaskCreationDTO,
+    service: ToDoService = Depends(get_service_todo),
+    user: UserDTO = Depends(get_current_active_user),
 ):
     body.user_id = user.id
     result = await service.create(body)
@@ -31,7 +33,11 @@ async def create_task_todo(
 
 
 @todo_router.get("/{uuid}", status_code=200, response_model=Response[TaskDTO])
-async def get_task(uuid: UUID4, service: ToDoService = Depends(get_service_todo), user: UserDTO = Depends(get_current_active_user)):
+async def get_task(
+    uuid: UUID4,
+    service: ToDoService = Depends(get_service_todo),
+    user: UserDTO = Depends(get_current_active_user),
+):
     dto = TaskGetParamsDTO(id=uuid, user_id=user.id)
     result = await service.get_by_params(dto)
 
@@ -39,7 +45,11 @@ async def get_task(uuid: UUID4, service: ToDoService = Depends(get_service_todo)
 
 
 @todo_router.delete("/{uuid}", status_code=200, response_model=Response[TaskDTO])
-async def get_task(uuid: UUID4, service: ToDoService = Depends(get_service_todo), user: UserDTO = Depends(get_current_active_user)):
+async def get_task(
+    uuid: UUID4,
+    service: ToDoService = Depends(get_service_todo),
+    user: UserDTO = Depends(get_current_active_user),
+):
     dto = TaskDeletionDTO(id=uuid, user_id=user.id)
     result = await service.delete(dto)
 
@@ -51,7 +61,7 @@ async def get_all_task_paginated(
     page: Annotated[int, Query(ge=1)] = 1,
     per_page: Annotated[int, Query(ge=0)] = 10,
     service: ToDoService = Depends(get_service_todo),
-    user: UserDTO = Depends(get_current_active_user)
+    user: UserDTO = Depends(get_current_active_user),
 ):
     dto = TaskGetAllParams(user_id=user.id)
     result = await service.get_all_paginated_params(dto, page=page, per_page=per_page)
@@ -61,7 +71,9 @@ async def get_all_task_paginated(
 
 @todo_router.put("/update", status_code=200, response_model=Response[TaskDTO])
 async def update_put(
-    body: TaskUpdatePutDTO, service: ToDoService = Depends(get_service_todo), user: UserDTO = Depends(get_current_active_user)
+    body: TaskUpdatePutDTO,
+    service: ToDoService = Depends(get_service_todo),
+    user: UserDTO = Depends(get_current_active_user),
 ):
     body.user_id = user.id
     result = await service.update(body)
@@ -71,7 +83,9 @@ async def update_put(
 
 @todo_router.patch("/update", status_code=200, response_model=Response[TaskDTO])
 async def update_patch(
-    body: TaskUpdatePatchDTO, service: ToDoService = Depends(get_service_todo), user: UserDTO = Depends(get_current_active_user)
+    body: TaskUpdatePatchDTO,
+    service: ToDoService = Depends(get_service_todo),
+    user: UserDTO = Depends(get_current_active_user),
 ):
     body.user_id = user.id
     result = await service.update(body)

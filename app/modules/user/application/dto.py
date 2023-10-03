@@ -2,6 +2,7 @@ from pydantic import BaseModel, EmailStr, SecretStr, model_validator
 
 from app.kernel.application.dto import EntityDTO
 
+
 class UserDTO(EntityDTO):
     email: EmailStr
     username: str

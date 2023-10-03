@@ -1,6 +1,7 @@
 from email_validator import validate_email, EmailNotValidError
 from app.kernel.domain.exceptions import AuthErrorException
 
+
 class Email(str):
     def __new__(cls, email: str):
         try:

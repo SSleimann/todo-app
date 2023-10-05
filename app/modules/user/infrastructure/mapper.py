@@ -13,6 +13,7 @@ class UserMapper(BaseMapper):
             password=instance.password,
             access_token=instance.access_token,
             is_active=instance.is_active,
+            task_count=instance.task_count
         )
 
     def entity_to_model(self, entity: UserEntity) -> UserModel:

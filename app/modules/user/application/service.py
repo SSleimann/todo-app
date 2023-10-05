@@ -39,6 +39,7 @@ class UserService(BaseService):
             username=instance.username,
             access_token=instance.access_token,
             is_active=instance.is_active,
+            task_count=instance.task_count
         )
 
         return {"message": "Created!", "data": dto}
@@ -52,6 +53,7 @@ class UserService(BaseService):
             access_token=instance.access_token,
             username=instance.username,
             is_active=instance.is_active,
+            task_count=instance.task_count
         )
 
         return {"message": "Ok!", "data": dto}
@@ -86,6 +88,7 @@ class UserService(BaseService):
             access_token=instance.access_token,
             username=instance.username,
             is_active=instance.is_active,
+            task_count=instance.task_count
         )
 
         return {"message": "Ok!", "data": dto}
@@ -99,6 +102,7 @@ class UserService(BaseService):
             access_token=instance.access_token,
             username=instance.username,
             is_active=instance.is_active,
+            task_count=instance.task_count
         )
 
         return {"message": "Ok!", "data": dto}

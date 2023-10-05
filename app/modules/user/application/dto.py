@@ -8,6 +8,7 @@ class UserDTO(EntityDTO):
     username: str
     is_active: bool
     access_token: str | None
+    task_count: int = 0
 
 
 class UserCreationDTO(BaseModel):

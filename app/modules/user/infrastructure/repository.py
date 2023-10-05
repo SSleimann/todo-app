@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
 from app.config.security import create_access_token
 from app.config.apiconfig import current_config
-from app.kernel.domain.exceptions import EntityNotFoundException
+from app.kernel.domain.exceptions import EntityNotFoundException, EntityExists
 from app.kernel.domain.value_objects import ValueUUID
 from app.kernel.infrastructure.repository import SQLAlchemyRepository
 from app.modules.user.domain.repository import UserInterfaceRepository
@@ -18,6 +19,20 @@ class UserRepository(UserInterfaceRepository, SQLAlchemyRepository):
     mapper_class = UserMapper
     model_class = UserModel
 
+    async def create(self, entity: UserEntity) -> UserEntity:
+        instance = self.entity_to_model(entity)
+
+        try:
+            self._session.add(instance)
+            await self._session.commit()
+        except IntegrityError:
+            await self._session.rollback()
+            raise EntityExists
+
+        await self._session.refresh(instance, ["tasks"])
+        
+        return self.model_to_entity(instance)
+    
     async def get_by_email(self, email: Email) -> UserEntity:
         model = self.get_model_class()
 
@@ -59,5 +74,6 @@ class UserRepository(UserInterfaceRepository, SQLAlchemyRepository):
 
         instance.access_token = access_token
         await self._session.commit()
+        await self._session.refresh(instance, ["tasks"])
 
         return self.model_to_entity(instance)

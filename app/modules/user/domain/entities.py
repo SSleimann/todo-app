@@ -11,3 +11,4 @@ class UserEntity(Entity):
     access_token: str
     username: str
     is_active: bool
+    task_count: int = 0

@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from app.config.security import gen_hashed_password, verify_password, decode_jwt
 
 from app.config.apiconfig import current_config
@@ -5,14 +7,13 @@ from app.kernel.domain.service import BaseService
 from app.kernel.domain.exceptions import EntityNotFoundException, AuthErrorException
 from app.modules.user.domain.entities import UserEntity
 from app.modules.user.domain.value_objects import Email
+from app.kernel.domain.value_objects import ValueUUID
+
 from app.modules.user.application.dto import (
     TokenDTO,
     LoginDTO,
     UserCreationDTO,
     UserDTO,
-    UserGetByAccessTokenDTO,
-    UserGetByEmailDTO,
-    UserGetDTO,
 )
 
 
@@ -42,8 +43,8 @@ class UserService(BaseService):
 
         return {"message": "Created!", "data": dto}
 
-    async def get(self, dto: UserGetDTO) -> dict[str, UserDTO]:
-        instance = await self.repository.get(dto.id)
+    async def get(self, user_id: UUID) -> dict[str, UserDTO]:
+        instance = await self.repository.get(user_id)
 
         dto = UserDTO(
             id=instance.id,
@@ -59,7 +60,7 @@ class UserService(BaseService):
         paswd = dto.password.get_secret_value()
 
         try:
-            instance = await self.repository.get_by_email(dto.email)
+            instance = await self.repository.get_by_email(Email(dto.email))
         except EntityNotFoundException:
             raise AuthErrorException("Invalid password or email!")
 
@@ -76,8 +77,8 @@ class UserService(BaseService):
 
         return {"message": "Authenticated!", "data": dto}
 
-    async def get_by_email(self, dto: UserGetByEmailDTO) -> dict[str, UserDTO]:
-        instance = await self.repository.get_by_email(dto.email)
+    async def get_by_email(self, email: Email) -> dict[str, UserDTO]:
+        instance = await self.repository.get_by_email(email)
 
         dto = UserDTO(
             id=instance.id,
@@ -89,10 +90,8 @@ class UserService(BaseService):
 
         return {"message": "Ok!", "data": dto}
 
-    async def get_by_access_token(
-        self, dto: UserGetByAccessTokenDTO
-    ) -> dict[str, UserDTO]:
-        instance = await self.repository.get_by_access_token(dto.access_token)
+    async def get_by_access_token(self, access_token: str) -> dict[str, UserDTO]:
+        instance = await self.repository.get_by_access_token(access_token)
 
         dto = UserDTO(
             id=instance.id,

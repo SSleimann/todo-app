@@ -13,8 +13,9 @@ from app.modules.todo.infrastructure.repository import SQLToDoRepository
 from app.modules.todo.application.service import ToDoService
 from app.modules.user.infrastructure.repository import UserRepository
 from app.modules.user.application.service import UserService
-from app.modules.user.application.dto import UserGetByEmailDTO, UserDTO
+from app.modules.user.application.dto import UserDTO
 from app.kernel.domain.exceptions import AuthErrorException, EntityNotFoundException
+from app.modules.user.domain.value_objects import Email
 
 
 def get_repository_todo(session: AsyncSession = Depends(get_async_session)):
@@ -42,17 +43,15 @@ async def get_current_user(
             token, current_config.jwt_secret_key, algorithms=[ALGORITHM]
         )
         email: str = payload.get("sub", None)
-        dto = UserGetByEmailDTO(email=email)
 
         if email is None:
             raise AuthErrorException("Could not validate credentials!")
 
     except JWTError as e:
-        print(e)
         raise AuthErrorException("Could not validate credentials!")
 
     try:
-        current_user = await service.get_by_email(dto)
+        current_user = await service.get_by_email(Email(email))
     except EntityNotFoundException:
         raise AuthErrorException("Invalid password or email!")
 

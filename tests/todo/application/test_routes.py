@@ -103,7 +103,7 @@ async def test_update_router_put(api_client: TestClient, session, task_test):
 
     req = api_client.put(f"/todo/update/{task_test.id}", json=payload, headers=headers)
     json = req.json()
-    
+
     assert json["data"]["id"] == str(taskGet.id)
     assert json["data"]["title"] != taskGet.title
     assert json["data"]["description"] != taskGet.description
@@ -121,7 +121,9 @@ async def test_update_router_patch(api_client: TestClient, session, task_test):
     )
     payload = {"status": 1}
 
-    req = api_client.patch(f"/todo/update/{task_test.id}", json=payload, headers=headers)
+    req = api_client.patch(
+        f"/todo/update/{task_test.id}", json=payload, headers=headers
+    )
     json = req.json()
 
     assert json["data"]["id"] == str(taskGet.id)

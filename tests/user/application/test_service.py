@@ -3,14 +3,12 @@ import pytest
 from app.config.security import gen_hashed_password
 from app.modules.user.infrastructure.models import UserModel
 from app.kernel.domain.value_objects import ValueUUID
+from app.modules.user.domain.value_objects import Email
 
 from app.modules.user.infrastructure.repository import UserRepository
 from app.modules.user.application.dto import (
     LoginDTO,
     UserCreationDTO,
-    UserGetByEmailDTO,
-    UserGetDTO,
-    UserGetByAccessTokenDTO,
 )
 from app.modules.user.application.service import UserService
 from app.kernel.domain.exceptions import AuthErrorException
@@ -42,9 +40,7 @@ async def test_user_get_service(session, user_test):
     repo = UserRepository(session)
     service = UserService(repo)
 
-    dto = UserGetDTO(id=user_test.id)
-
-    user = await service.get(dto)
+    user = await service.get(user_test.id)
     user_data = user["data"]
     user_message = user["message"]
 
@@ -58,9 +54,7 @@ async def test_user_get_by_email_service(session, user_test):
     repo = UserRepository(session)
     service = UserService(repo)
 
-    dto = UserGetByEmailDTO(email=user_test.email)
-
-    user = await service.get_by_email(dto)
+    user = await service.get_by_email(Email(user_test.email))
     user_data = user["data"]
     user_message = user["message"]
 
@@ -73,9 +67,7 @@ async def test_user_get_by_access_token(session, user_test):
     repo = UserRepository(session)
     service = UserService(repo)
 
-    dto = UserGetByAccessTokenDTO(access_token=user_test.access_token)
-
-    user = await service.get_by_access_token(dto)
+    user = await service.get_by_access_token(user_test.access_token)
     user_data = user["data"]
     user_message = user["message"]
 
@@ -112,7 +104,7 @@ async def test_user_login_invalid_email(session):
 async def test_user_login_active_user(session):
     model = UserModel(
         id=ValueUUID.next_id(),
-        email="ultrates11t@email.com",
+        email=Email("ultrates11t@email.com"),
         username="usertest",
         password=gen_hashed_password("testpass"),
         access_token="abcde",

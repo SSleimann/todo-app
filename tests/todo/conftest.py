@@ -27,9 +27,9 @@ async def user_test(session: AsyncSession):
 
     session.add(user)
     await session.commit()
-    
+
     yield user
-    
+
     await session.delete(user)
     await session.commit()
 

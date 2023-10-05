@@ -57,7 +57,9 @@ async def get_all_task_paginated(
     service: ToDoService = Depends(get_service_todo),
     user: UserDTO = Depends(get_current_active_user),
 ):
-    result = await service.get_all_paginated_params(user.id, page=page, per_page=per_page)
+    result = await service.get_all_paginated_params(
+        user.id, page=page, per_page=per_page
+    )
 
     return result
 

@@ -18,9 +18,7 @@ async def test_service_task_create(session, user_test):
     repo = SQLToDoRepository(session)
     service = ToDoService(repo)
 
-    task_creation_dto = TaskCreationDTO(
-        title="test", description="test"
-    )
+    task_creation_dto = TaskCreationDTO(title="test", description="test")
     result = await service.create(user_test.id, task_creation_dto)
 
     assert result["data"].title == task_creation_dto.title
@@ -46,9 +44,7 @@ async def test_service_task_delete(session, user_test):
     repo = SQLToDoRepository(session)
     service = ToDoService(repo)
 
-    task_creation_dto = TaskCreationDTO(
-        title="test", description="test"
-    )
+    task_creation_dto = TaskCreationDTO(title="test", description="test")
     newEntity = await service.create(user_test.id, task_creation_dto)
 
     result = await service.delete(newEntity["data"].id, user_test.id)
@@ -87,9 +83,7 @@ async def test_update_patch_task(session, task_test):
 
     last_title = task_test.title
 
-    entity_update_dto = TaskUpdatePatchDTO(
-        title="test2"
-    )
+    entity_update_dto = TaskUpdatePatchDTO(title="test2")
 
     result = await service.update(task_test.id, task_test.user_id, entity_update_dto)
 

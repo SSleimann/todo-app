@@ -27,18 +27,6 @@ class UserCreationDTO(BaseModel):
         return self
 
 
-class UserGetDTO(EntityDTO):
-    ...
-
-
-class UserGetByEmailDTO(BaseModel):
-    email: EmailStr
-
-
-class UserGetByAccessTokenDTO(BaseModel):
-    access_token: str
-
-
 class LoginDTO(BaseModel):
     email: EmailStr
     password: SecretStr

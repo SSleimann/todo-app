@@ -32,10 +32,8 @@ class ToDoService(BaseService):
         return {"message": "Created!", "data": dto}
 
     async def delete(self, task_id: UUID, user_id: UUID) -> dict[str, TaskDTO]:
-        task = await self.repository.get_by_params(
-            {"id": task_id, "user_id": user_id}
-        )
-        
+        task = await self.repository.get_by_params({"id": task_id, "user_id": user_id})
+
         result = await self.repository.delete(task.id)
 
         dto = TaskDTO(
@@ -64,7 +62,10 @@ class ToDoService(BaseService):
         return {"message": "Ok!", "data": dto}
 
     async def update(
-        self, task_id: UUID, user_id: UUID, taskDto: TaskUpdatePutDTO | TaskUpdatePatchDTO
+        self,
+        task_id: UUID,
+        user_id: UUID,
+        taskDto: TaskUpdatePutDTO | TaskUpdatePatchDTO,
     ) -> dict[str, TaskDTO]:
         task = await self.repository.get_by_params({"id": task_id, "user_id": user_id})
 

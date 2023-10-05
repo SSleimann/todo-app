@@ -7,7 +7,6 @@ from app.modules.user.application.dto import (
     UserDTO,
     LoginDTO,
     TokenDTO,
-    UserGetDTO,
 )
 from app.modules.user.application.service import UserService
 
@@ -35,7 +34,6 @@ async def get_user_me(
     current_user: UserDTO = Depends(get_current_active_user),
     service: UserService = Depends(get_service_user),
 ):
-    dto = UserGetDTO(id=current_user.id)
-    result = await service.get(dto)
+    result = await service.get(current_user.id)
 
     return result

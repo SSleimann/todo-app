@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from app.kernel.domain.repository import BaseRepository
 from app.modules.user.domain.entities import UserEntity
 from app.modules.user.domain.value_objects import Email
+from app.kernel.domain.value_objects import ValueUUID
 
 
 class UserInterfaceRepository(BaseRepository, ABC):
@@ -17,5 +18,5 @@ class UserInterfaceRepository(BaseRepository, ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def set_access_token(self, email: Email, access_token: str) -> UserEntity:
+    async def set_access_token(self, id: ValueUUID) -> UserEntity:
         raise NotImplementedError

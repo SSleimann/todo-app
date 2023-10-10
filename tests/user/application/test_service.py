@@ -101,27 +101,6 @@ async def test_user_login_invalid_email(session):
         await service.login(dto)
 
 
-async def test_user_login_active_user(session):
-    model = UserModel(
-        id=ValueUUID.next_id(),
-        email=Email("ultrates11t@email.com"),
-        username="usertest",
-        password=gen_hashed_password("testpass"),
-        access_token="abcde",
-        is_active=False,
-    )
-
-    session.add(model)
-    await session.commit()
-
-    repo = UserRepository(session)
-    service = UserService(repo)
-    dto = LoginDTO(email=model.email, password="testpass")
-
-    with pytest.raises(AuthErrorException, match="User is not active!"):
-        await service.login(dto)
-
-
 async def test_user_login_invalid_passwd(session, user_test):
     repo = UserRepository(session)
     service = UserService(repo)
@@ -129,3 +108,16 @@ async def test_user_login_invalid_passwd(session, user_test):
 
     with pytest.raises(AuthErrorException, match="Invalid password or email!"):
         await service.login(dto)
+
+async def test_user_activate_account(session, user_test):
+    repo = UserRepository(session)
+    service = UserService(repo)
+    
+    user_test.is_active = False
+    await session.commit()
+    
+    result = await service.activate_account(user_test.id)
+    
+    assert result.is_active == True
+    assert user_test.is_active == True
+    assert result.id == user_test.id

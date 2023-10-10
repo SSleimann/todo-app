@@ -24,7 +24,8 @@ dependencies = [
   "pytest",
   "black",
   "python-jose[cryptography]",
-  "passlib[bcrypt]"
+  "passlib[bcrypt]",
+  "cachetools"
 ]
 keywords = ["clean architecture", "api", "to-do", "fastapi"]
 

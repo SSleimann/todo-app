@@ -3,6 +3,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from starlette.requests import Request
+from secrets import token_hex
 
 from app.kernel.domain.exceptions import AuthErrorException
 from app.config.apiconfig import current_config
@@ -44,6 +45,9 @@ def decode_jwt(token: str | None, jwt_secret_key: str) -> str | None:
     except JWTError:
         return None
 
+def generate_code(nbytes: int = 16) -> bytes:
+    code = token_hex(nbytes)
+    return code.encode("utf-8")
 
 class JWTBearer(HTTPBearer):
     async def __call__(self, request: Request) -> HTTPAuthorizationCredentials | None:

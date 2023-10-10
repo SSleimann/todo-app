@@ -30,7 +30,7 @@ async def test_register_route(api_client: TestClient, session: AsyncSession):
     assert res.status_code == 201
     assert data["data"]["email"] == payload["email"]
     assert data["data"]["username"] == payload["username"]
-    assert data["data"]["is_active"] == True
+    assert data["data"]["is_active"] == False
     assert data["data"]["access_token"] == None
     assert u is not None
 

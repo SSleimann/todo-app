@@ -77,3 +77,18 @@ class UserRepository(UserInterfaceRepository, SQLAlchemyRepository):
         await self._session.refresh(instance, ["tasks"])
 
         return self.model_to_entity(instance)
+
+    async def activate_account(self, id: ValueUUID):
+        model = self.get_model_class()
+
+        instance = await self._session.get(model, id)
+        
+        if instance is None:
+            raise EntityNotFoundException
+        
+        instance.is_active = True
+        await self._session.commit()
+        await self._session.refresh(instance, ["tasks"])
+        
+        return self.model_to_entity(instance)
+        

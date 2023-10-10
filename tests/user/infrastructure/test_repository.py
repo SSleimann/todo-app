@@ -50,3 +50,15 @@ async def test_repository_set_access_token(session, user_test):
     assert instance.access_token is not None
     assert instance.access_token == user_test.access_token
     assert token_user["sub"] == instance.email
+
+async def test_repository_activate_account(session, user_test):
+    repo = UserRepository(session)
+    
+    user_test.is_active = False
+    await session.commit()
+    
+    instance = await repo.activate_account(user_test.id)
+
+    assert instance.is_active == True
+    assert user_test.is_active == True
+    assert instance.id == user_test.id

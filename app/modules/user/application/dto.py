@@ -1,4 +1,6 @@
-from pydantic import BaseModel, EmailStr, SecretStr, model_validator
+from pydantic import BaseModel, EmailStr, SecretStr, model_validator, Field
+from datetime import datetime
+from uuid import UUID
 
 from app.kernel.application.dto import EntityDTO
 
@@ -36,3 +38,8 @@ class LoginDTO(BaseModel):
 class TokenDTO(BaseModel):
     access_token: str
     token_type: str
+
+class UserCodeDTO(BaseModel):
+    user_id : UUID
+    code : bytes
+    expiration_time: datetime = Field(description="Expiration time in seconds")

@@ -20,7 +20,7 @@ class UserInterfaceRepository(BaseRepository, ABC):
     @abstractmethod
     async def set_access_token(self, id: ValueUUID) -> UserEntity:
         raise NotImplementedError
-    
+
     @abstractmethod
     async def activate_account(self, id: ValueUUID) -> UserEntity:
         raise NotImplementedError

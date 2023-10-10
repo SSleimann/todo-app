@@ -39,7 +39,8 @@ class TokenDTO(BaseModel):
     access_token: str
     token_type: str
 
+
 class UserCodeDTO(BaseModel):
-    user_id : UUID
-    code : bytes
+    user_id: UUID
+    code: bytes
     expiration_time: datetime = Field(description="Expiration time in seconds")

@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings
 
 from cachetools import TTLCache
 
+
 class AppSettings(BaseSettings):
     database_url: str = "sqlite+aiosqlite:///db.db"
     jwt_secret_key: str = (

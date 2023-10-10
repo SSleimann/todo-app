@@ -45,9 +45,11 @@ def decode_jwt(token: str | None, jwt_secret_key: str) -> str | None:
     except JWTError:
         return None
 
+
 def generate_code(nbytes: int = 16) -> bytes:
     code = token_hex(nbytes)
     return code.encode("utf-8")
+
 
 class JWTBearer(HTTPBearer):
     async def __call__(self, request: Request) -> HTTPAuthorizationCredentials | None:

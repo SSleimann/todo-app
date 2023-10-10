@@ -28,17 +28,25 @@ def get_service_todo(repo: SQLToDoRepository = Depends(get_repository_todo)):
 def get_repository_user(session: AsyncSession = Depends(get_async_session)):
     return UserRepository(session)
 
+
 def get_repository_cache_memory():
     return MemoryCacheRepository(mem_cache)
+
 
 def get_service_user(repo: UserRepository = Depends(get_repository_user)):
     return UserService(repo)
 
+
 def get_service_cache(repo: CacheService = Depends(get_repository_cache_memory)):
     return CacheService(repo)
 
-def get_service_usercache(cache_service: CacheService = Depends(get_service_cache), user_service: UserService = Depends(get_service_user)):
+
+def get_service_usercache(
+    cache_service: CacheService = Depends(get_service_cache),
+    user_service: UserService = Depends(get_service_user),
+):
     return UserCacheService(cache_service, user_service)
+
 
 async def get_current_user(
     token: Annotated[str, Depends(JWTBearer())],

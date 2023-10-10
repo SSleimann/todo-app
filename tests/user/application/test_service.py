@@ -109,15 +109,16 @@ async def test_user_login_invalid_passwd(session, user_test):
     with pytest.raises(AuthErrorException, match="Invalid password or email!"):
         await service.login(dto)
 
+
 async def test_user_activate_account(session, user_test):
     repo = UserRepository(session)
     service = UserService(repo)
-    
+
     user_test.is_active = False
     await session.commit()
-    
+
     result = await service.activate_account(user_test.id)
-    
+
     assert result.is_active == True
     assert user_test.is_active == True
     assert result.id == user_test.id

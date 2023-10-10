@@ -30,9 +30,9 @@ class UserRepository(UserInterfaceRepository, SQLAlchemyRepository):
             raise EntityExists
 
         await self._session.refresh(instance, ["tasks"])
-        
+
         return self.model_to_entity(instance)
-    
+
     async def get_by_email(self, email: Email) -> UserEntity:
         model = self.get_model_class()
 
@@ -82,13 +82,12 @@ class UserRepository(UserInterfaceRepository, SQLAlchemyRepository):
         model = self.get_model_class()
 
         instance = await self._session.get(model, id)
-        
+
         if instance is None:
             raise EntityNotFoundException
-        
+
         instance.is_active = True
         await self._session.commit()
         await self._session.refresh(instance, ["tasks"])
-        
+
         return self.model_to_entity(instance)
-        

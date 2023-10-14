@@ -92,36 +92,42 @@ async def test_get_user_me(api_client: TestClient, session: AsyncSession):
     assert data["data"]["username"] == user.username
     assert data["data"]["is_active"] == user.is_active
 
-async def test_route_get_activation_code(api_client: TestClient, session: AsyncSession, user_test):
+
+async def test_route_get_activation_code(
+    api_client: TestClient, session: AsyncSession, user_test
+):
     repo = UserRepository(session)
     await repo.update(user_test.id, {"is_active": False})
     user = await repo.set_access_token(user_test.id)
-    
+
     res = api_client.get(
         "/user/activate", headers={"Authorization": f"Bearer {user.access_token}"}
     )
     data = res.json()
-    
+
     MemoryCacheRepository(mem_cache).delete(user.id)
-    
+
     assert data["message"] == "You can activate your account"
     assert data["data"]["code"] is not None
     assert data["data"]["user_id"] == str(user_test.id)
-    
-    
-async def test_router_activate_account(api_client: TestClient, session: AsyncSession, user_test):
+
+
+async def test_router_activate_account(
+    api_client: TestClient, session: AsyncSession, user_test
+):
     repo = UserRepository(session)
     await repo.update(user_test.id, {"is_active": False})
     user = await repo.set_access_token(user_test.id)
-    
+
     code = api_client.get(
         "/user/activate", headers={"Authorization": f"Bearer {user.access_token}"}
     ).json()["data"]["code"]
-    
+
     res = api_client.get(
-        f"/user/activate/{code}", headers={"Authorization": f"Bearer {user.access_token}"}
+        f"/user/activate/{code}",
+        headers={"Authorization": f"Bearer {user.access_token}"},
     )
     data = res.json()
-    
+
     assert data["data"]["id"] == str(user_test.id)
     assert data["data"]["is_active"] == True

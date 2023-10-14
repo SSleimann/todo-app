@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
+from app.config.apiconfig import current_config
 from app.config.database import Base
 from app.modules.todo.infrastructure.models import TaskModel
 from app.modules.user.infrastructure.models import UserModel
@@ -30,7 +31,7 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-
+config.set_main_option("sqlalchemy.url", current_config.database_url)
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.

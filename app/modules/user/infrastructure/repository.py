@@ -78,7 +78,7 @@ class UserRepository(UserInterfaceRepository, SQLAlchemyRepository):
 
         return self.model_to_entity(instance)
 
-    async def activate_account(self, id: ValueUUID):
+    async def activate_account(self, id: ValueUUID) -> UserEntity:
         model = self.get_model_class()
 
         instance = await self._session.get(model, id)

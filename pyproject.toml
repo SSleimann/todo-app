@@ -25,7 +25,8 @@ dependencies = [
   "black",
   "python-jose[cryptography]",
   "passlib[bcrypt]",
-  "cachetools"
+  "cachetools",
+  "asyncpg"
 ]
 keywords = ["clean architecture", "api", "to-do", "fastapi"]
 
